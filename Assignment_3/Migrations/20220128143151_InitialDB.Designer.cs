@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Assignment_3.Migrations
 {
     [DbContext(typeof(MovieDBContext))]
-    [Migration("20220128133757_initialdb3")]
-    partial class initialdb3
+    [Migration("20220128143151_InitialDB")]
+    partial class InitialDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -86,8 +86,8 @@ namespace Assignment_3.Migrations
                     b.Property<string>("PhotoUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ReleaseYear")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("ReleaseYear")
+                        .HasColumnType("int");
 
                     b.Property<string>("YoutubeLink")
                         .HasColumnType("nvarchar(max)");
@@ -97,6 +97,38 @@ namespace Assignment_3.Migrations
                     b.HasIndex("FranchiseId");
 
                     b.ToTable("Movies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Director = "Christopher Nolan",
+                            Genre = "Sci-fi",
+                            MovieTitle = "Interstellar",
+                            PhotoUrl = "https://www.imdb.com/title/tt0816692/mediaviewer/rm4043724800/",
+                            ReleaseYear = 2014,
+                            YoutubeLink = "https://www.youtube.com/watch?v=zSWdZVtXT7E&t=60s"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Director = "Joe & Anthony Russo",
+                            Genre = "Action, Sci-fi",
+                            MovieTitle = "Avengers: End Game",
+                            PhotoUrl = "https://www.imdb.com/title/tt4154796/mediaviewer/rm2775147008/",
+                            ReleaseYear = 2019,
+                            YoutubeLink = "https://www.youtube.com/watch?v=TcMBFSGVi1c"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Director = "Francis Ford Coppola",
+                            Genre = "Crime, Drama",
+                            MovieTitle = "The Godfather",
+                            PhotoUrl = "https://www.imdb.com/title/tt0068646/mediaviewer/rm746868224/",
+                            ReleaseYear = 1972,
+                            YoutubeLink = "https://www.youtube.com/watch?v=sY1S34973zA"
+                        });
                 });
 
             modelBuilder.Entity("CharacterMovie", b =>

@@ -12,7 +12,7 @@ namespace Assignment_3
         [Required]
         public string MovieTitle { get; set; }
         public string Genre { get; set; }
-        public DateTime ReleaseYear { get; set; }
+        public int ReleaseYear { get; set; }
         public string Director { get; set; }
         public string PhotoUrl { get; set; }
         public string YoutubeLink { get; set; }
