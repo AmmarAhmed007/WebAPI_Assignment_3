@@ -8,7 +8,7 @@ namespace Assignment_3
     public class Movie
     {
         [Key]
-        public int Id { get; set; }
+        public int MovieId { get; set; }
         [Required]
         public string MovieTitle { get; set; }
         public string Genre { get; set; }

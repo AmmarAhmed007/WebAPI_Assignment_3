@@ -1,5 +1,6 @@
 ﻿using Assignment_3.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Assignment_3
 {
@@ -11,7 +12,7 @@ namespace Assignment_3
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data source = DESKTOP-S6N08V2\\SQLEXPRESS; Initial Catalog = MoviesDB; Integrated Security=true;");
+            optionsBuilder.UseSqlServer("Data source = DESKTOP-S6N08V2\\SQLEXPRESS; Initial Catalog = MovieCharactersDB; Integrated Security=true;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -20,18 +21,20 @@ namespace Assignment_3
 
                 new Movie
                 {
-                    Id = 1,
+                    MovieId = 1,
                     MovieTitle = "Interstellar",
                     Genre = "Sci-fi",
                     ReleaseYear = 2014,
                     Director = "Christopher Nolan",
                     PhotoUrl = "https://www.imdb.com/title/tt0816692/mediaviewer/rm4043724800/",
-                    YoutubeLink = "https://www.youtube.com/watch?v=zSWdZVtXT7E&t=60s"
+                    YoutubeLink = "https://www.youtube.com/watch?v=zSWdZVtXT7E&t=60s",
+                    
+
                 },
 
                 new Movie
                 {
-                    Id = 2,
+                    MovieId = 2,
                     MovieTitle = "Avengers: End Game",
                     Genre = "Action, Sci-fi",
                     ReleaseYear = 2019,
@@ -42,29 +45,28 @@ namespace Assignment_3
 
                 new Movie
                 {
-                    Id = 3,
+                    MovieId = 3,
                     MovieTitle = "The Godfather",
                     Genre = "Crime, Drama",
                     ReleaseYear = 1972,
                     Director = "Francis Ford Coppola",
                     PhotoUrl = "https://www.imdb.com/title/tt0068646/mediaviewer/rm746868224/",
                     YoutubeLink = "https://www.youtube.com/watch?v=sY1S34973zA"
+                    
                 }
             );
+
+            modelBuilder.Entity<Character>().HasData(
+
+                new Character
+                {
+                    CharacterId = 1,
+                    FullName = "Matthew Mcconaughey",
+                    Alias = "Cooper",
+                    Gender = "Male",
+                    PhotoUrl = "https://www.imdb.com/name/nm0000190/mediaviewer/rm477213952/",
+                }
+                );
         }
-
-        //public static void CreateMovie()
-        //{
-        //    Movie movie1 = new Movie()
-        //    {
-        //        MovieTitle = "Interstellar",
-        //        Genre = "Sci-fi",
-        //        ReleaseYear = 2014,
-        //        Director = "Christopher Nolan",
-        //        PhotoUrl = "https://www.imdb.com/title/tt0816692/mediaviewer/rm4043724800/",
-        //        YoutubeLink = "https://www.youtube.com/watch?v=zSWdZVtXT7E&t=60s"
-
-        //    };
-        //}
     }
 }
