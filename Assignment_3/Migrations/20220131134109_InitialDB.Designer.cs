@@ -4,14 +4,16 @@ using Assignment_3;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Assignment_3.Migrations
 {
     [DbContext(typeof(MovieDBContext))]
-    partial class MovieDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220131134109_InitialDB")]
+    partial class InitialDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,8 +85,7 @@ namespace Assignment_3.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -105,9 +106,6 @@ namespace Assignment_3.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CharacterId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Director")
                         .HasMaxLength(50)
@@ -144,7 +142,6 @@ namespace Assignment_3.Migrations
                         new
                         {
                             Id = 1,
-                            CharacterId = 1,
                             Director = "Christopher Nolan",
                             Genre = "Sci-fi",
                             MovieTitle = "Interstellar",
@@ -155,7 +152,6 @@ namespace Assignment_3.Migrations
                         new
                         {
                             Id = 2,
-                            CharacterId = 2,
                             Director = "Joe & Anthony Russo",
                             Genre = "Action, Sci-fi",
                             MovieTitle = "Avengers: End Game",
@@ -166,7 +162,6 @@ namespace Assignment_3.Migrations
                         new
                         {
                             Id = 3,
-                            CharacterId = 3,
                             Director = "Francis Ford Coppola",
                             Genre = "Crime, Drama",
                             MovieTitle = "The Godfather",
