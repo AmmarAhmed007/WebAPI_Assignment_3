@@ -6,14 +6,19 @@ namespace Assignment_3
 {
     public class MovieDBContext : DbContext
     {
+        public MovieDBContext(DbContextOptions options) : base(options)
+        {
+
+        }
+
         public DbSet<Character> Characters { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Franchise> Franchises { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Data source = DESKTOP-S6N08V2\\SQLEXPRESS; Initial Catalog = MoviesCharactersDB; Integrated Security=true;");
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Data source = DESKTOP-S6N08V2\\SQLEXPRESS; Initial Catalog = MoviesCharactersDB; Integrated Security=true;");
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
