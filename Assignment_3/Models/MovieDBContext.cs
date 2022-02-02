@@ -22,21 +22,20 @@ namespace Assignment_3
                 new Movie
                 {
                     Id = 1,
-                    CharacterId = 1,
+                    //CharacterId = 1,
                     MovieTitle = "Interstellar",
                     Genre = "Sci-fi",
                     ReleaseYear = 2014,
                     Director = "Christopher Nolan",
                     PhotoUrl = "https://www.imdb.com/title/tt0816692/mediaviewer/rm4043724800/",
-                    YoutubeLink = "https://www.youtube.com/watch?v=zSWdZVtXT7E&t=60s",
-                    
-
+                    YoutubeLink = "https://www.youtube.com/watch?v=zSWdZVtXT7E&t=60s"
+                   
                 },
 
                 new Movie
                 {
                     Id = 2,
-                    CharacterId = 2,
+                    //CharacterId = 2,
                     MovieTitle = "Avengers: End Game",
                     Genre = "Action, Sci-fi",
                     ReleaseYear = 2019,
@@ -48,7 +47,7 @@ namespace Assignment_3
                 new Movie
                 {
                     Id = 3,
-                    CharacterId = 3,
+                    //CharacterId = 3,
                     MovieTitle = "The Godfather",
                     Genre = "Crime, Drama",
                     ReleaseYear = 1972,
