@@ -21,7 +21,7 @@ namespace Assignment_3
         public string YoutubeLink { get; set; }
         //Relationship
         //public int CharacterId { get; set; }
-        //public int FranchiseId { get; set; }
+        public int FranchiseId { get; set; }
         public ICollection<Character> Characters { get; set; }
         public Franchise Franchise { get; set; }
 

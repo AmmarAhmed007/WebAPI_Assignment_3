@@ -106,9 +106,6 @@ namespace Assignment_3.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CharacterId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Director")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -144,7 +141,6 @@ namespace Assignment_3.Migrations
                         new
                         {
                             Id = 1,
-                            CharacterId = 1,
                             Director = "Christopher Nolan",
                             Genre = "Sci-fi",
                             MovieTitle = "Interstellar",
@@ -155,7 +151,6 @@ namespace Assignment_3.Migrations
                         new
                         {
                             Id = 2,
-                            CharacterId = 2,
                             Director = "Joe & Anthony Russo",
                             Genre = "Action, Sci-fi",
                             MovieTitle = "Avengers: End Game",
@@ -166,7 +161,6 @@ namespace Assignment_3.Migrations
                         new
                         {
                             Id = 3,
-                            CharacterId = 3,
                             Director = "Francis Ford Coppola",
                             Genre = "Crime, Drama",
                             MovieTitle = "The Godfather",
