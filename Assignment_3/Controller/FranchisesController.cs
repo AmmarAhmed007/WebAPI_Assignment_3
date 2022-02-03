@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Assignment_3;
 using Assignment_3.Models;
 using System.Net.Mime;
+using AutoMapper;
+using Assignment_3.Models.DTO.Franchise;
 
 namespace Assignment_3.Controller
 {
@@ -18,10 +20,12 @@ namespace Assignment_3.Controller
     [ApiConventionType(typeof(DefaultApiConventions))]
     public class FranchisesController : ControllerBase
     {
+        private readonly IMapper _mapper;
         private readonly MovieDBContext _context;
 
-        public FranchisesController(MovieDBContext context)
+        public FranchisesController(MovieDBContext context, IMapper mapper)
         {
+            _mapper = mapper;
             _context = context;
         }
 
@@ -30,9 +34,9 @@ namespace Assignment_3.Controller
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Franchise>>> GetFranchises()
+        public async Task<ActionResult<IEnumerable<ReadFranchiseDTO>>> GetFranchises()
         {
-            return await _context.Franchises.ToListAsync();
+            return _mapper.Map<List<ReadFranchiseDTO>>(await _context.Franchises.ToListAsync());
         }
 
         /// <summary>

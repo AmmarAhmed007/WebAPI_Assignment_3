@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Assignment_3;
 using System.Net.Mime;
+using AutoMapper;
+using Assignment_3.Models.DTO.Movie;
 
 namespace Assignment_3.Controller
 {
@@ -18,10 +20,12 @@ namespace Assignment_3.Controller
     public class MoviesController : ControllerBase
     {
         private readonly MovieDBContext _context;
+        private readonly IMapper _mapper;
 
-        public MoviesController(MovieDBContext context)
+        public MoviesController(MovieDBContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -29,9 +33,9 @@ namespace Assignment_3.Controller
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Movie>>> GetMovies()
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies()
         {
-            return await _context.Movies.ToListAsync();
+            return _mapper.Map<List<MovieDTO>>(await _context.Movies.Include(c => c.Characters).ToListAsync());
         }
 
         /// <summary>
@@ -56,17 +60,18 @@ namespace Assignment_3.Controller
         /// Update a movie
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="movie"></param>
+        /// <param name="movieDto"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMovie(int id, Movie movie)
+        public async Task<IActionResult> PutMovie(int id, MovieDTO movieDto)
         {
-            if (id != movie.Id)
+            if (id != movieDto.Id)
             {
                 return BadRequest();
             }
-
-            _context.Entry(movie).State = EntityState.Modified;
+            //Map to domain
+            Movie domainMovie = _mapper.Map<Movie>(movieDto);
+            _context.Entry(domainMovie).State = EntityState.Modified;
 
             try
             {

@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Assignment_3;
 using Assignment_3.Models;
 using System.Net.Mime;
+using AutoMapper;
+using Assignment_3.Models.DTO.Character;
 
 namespace Assignment_3.Controller
 {
@@ -18,21 +20,23 @@ namespace Assignment_3.Controller
     [ApiConventionType(typeof(DefaultApiConventions))]
     public class CharactersController : ControllerBase
     {
+        private readonly IMapper _mapper;
         private readonly MovieDBContext _context;
 
-        public CharactersController(MovieDBContext context)
+        public CharactersController(MovieDBContext context, IMapper mapper)
         {
+            _mapper = mapper;
             _context = context;
         }
 
         /// <summary>
-        /// Get all characters
+        /// Get all the characters
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Character>>> GetCharacters()
+        public async Task<ActionResult<IEnumerable<ReadCharacterDTO>>> GetCharacters()
         {
-            return await _context.Characters.ToListAsync();
+            return _mapper.Map<List<ReadCharacterDTO>>(await _context.Characters.Include(c => c.Movies).ToListAsync());
         }
 
         /// <summary>

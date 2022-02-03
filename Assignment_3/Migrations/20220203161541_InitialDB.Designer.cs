@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Assignment_3.Migrations
 {
     [DbContext(typeof(MovieDBContext))]
-    [Migration("20220202134630_InitialDB1")]
-    partial class InitialDB1
+    [Migration("20220203161541_InitialDB")]
+    partial class InitialDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -82,7 +82,8 @@ namespace Assignment_3.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(50)
@@ -98,6 +99,12 @@ namespace Assignment_3.Migrations
                             Id = 1,
                             Description = "The Avengers Saga",
                             Name = "Marvel: Avengers"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Interstellar",
+                            Name = "The Interstellar Saga"
                         });
                 });
 
@@ -120,7 +127,6 @@ namespace Assignment_3.Migrations
                         .HasColumnType("nvarchar(25)");
 
                     b.Property<string>("MovieTitle")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhotoUrl")
@@ -144,6 +150,7 @@ namespace Assignment_3.Migrations
                         {
                             Id = 1,
                             Director = "Christopher Nolan",
+                            FranchiseId = 2,
                             Genre = "Sci-fi",
                             MovieTitle = "Interstellar",
                             PhotoUrl = "https://www.imdb.com/title/tt0816692/mediaviewer/rm4043724800/",
@@ -154,6 +161,7 @@ namespace Assignment_3.Migrations
                         {
                             Id = 2,
                             Director = "Joe & Anthony Russo",
+                            FranchiseId = 1,
                             Genre = "Action, Sci-fi",
                             MovieTitle = "Avengers: End Game",
                             PhotoUrl = "https://www.imdb.com/title/tt4154796/mediaviewer/rm2775147008/",
@@ -164,6 +172,7 @@ namespace Assignment_3.Migrations
                         {
                             Id = 3,
                             Director = "Francis Ford Coppola",
+                            FranchiseId = 1,
                             Genre = "Crime, Drama",
                             MovieTitle = "The Godfather",
                             PhotoUrl = "https://www.imdb.com/title/tt0068646/mediaviewer/rm746868224/",
@@ -172,41 +181,63 @@ namespace Assignment_3.Migrations
                         });
                 });
 
-            modelBuilder.Entity("CharacterMovie", b =>
+            modelBuilder.Entity("MovieCharacters", b =>
                 {
-                    b.Property<int>("CharactersId")
+                    b.Property<int>("CharacterId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MoviesId")
+                    b.Property<int>("MovieId")
                         .HasColumnType("int");
 
-                    b.HasKey("CharactersId", "MoviesId");
+                    b.HasKey("CharacterId", "MovieId");
 
-                    b.HasIndex("MoviesId");
+                    b.HasIndex("MovieId");
 
-                    b.ToTable("CharacterMovie");
+                    b.ToTable("MovieCharacters");
+
+                    b.HasData(
+                        new
+                        {
+                            CharacterId = 1,
+                            MovieId = 1
+                        },
+                        new
+                        {
+                            CharacterId = 2,
+                            MovieId = 1
+                        },
+                        new
+                        {
+                            CharacterId = 2,
+                            MovieId = 3
+                        },
+                        new
+                        {
+                            CharacterId = 1,
+                            MovieId = 2
+                        });
                 });
 
             modelBuilder.Entity("Assignment_3.Movie", b =>
                 {
-                    b.HasOne("Assignment_3.Models.Franchise", "Franchise")
+                    b.HasOne("Assignment_3.Models.Franchise", "Franchises")
                         .WithMany("Movies")
                         .HasForeignKey("FranchiseId");
 
-                    b.Navigation("Franchise");
+                    b.Navigation("Franchises");
                 });
 
-            modelBuilder.Entity("CharacterMovie", b =>
+            modelBuilder.Entity("MovieCharacters", b =>
                 {
                     b.HasOne("Assignment_3.Models.Character", null)
                         .WithMany()
-                        .HasForeignKey("CharactersId")
+                        .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Assignment_3.Movie", null)
                         .WithMany()
-                        .HasForeignKey("MoviesId")
+                        .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -2,7 +2,7 @@
 
 namespace Assignment_3.Migrations
 {
-    public partial class InitialDB1 : Migration
+    public partial class InitialDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,7 +29,7 @@ namespace Assignment_3.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -42,7 +42,7 @@ namespace Assignment_3.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MovieTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MovieTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Genre = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
                     ReleaseYear = table.Column<int>(type: "int", maxLength: 4, nullable: false),
                     Director = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -62,24 +62,24 @@ namespace Assignment_3.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CharacterMovie",
+                name: "MovieCharacters",
                 columns: table => new
                 {
-                    CharactersId = table.Column<int>(type: "int", nullable: false),
-                    MoviesId = table.Column<int>(type: "int", nullable: false)
+                    CharacterId = table.Column<int>(type: "int", nullable: false),
+                    MovieId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CharacterMovie", x => new { x.CharactersId, x.MoviesId });
+                    table.PrimaryKey("PK_MovieCharacters", x => new { x.CharacterId, x.MovieId });
                     table.ForeignKey(
-                        name: "FK_CharacterMovie_Characters_CharactersId",
-                        column: x => x.CharactersId,
+                        name: "FK_MovieCharacters_Characters_CharacterId",
+                        column: x => x.CharacterId,
                         principalTable: "Characters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CharacterMovie_Movies_MoviesId",
-                        column: x => x.MoviesId,
+                        name: "FK_MovieCharacters_Movies_MovieId",
+                        column: x => x.MovieId,
                         principalTable: "Movies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -98,22 +98,42 @@ namespace Assignment_3.Migrations
             migrationBuilder.InsertData(
                 table: "Franchises",
                 columns: new[] { "Id", "Description", "Name" },
-                values: new object[] { 1, "The Avengers Saga", "Marvel: Avengers" });
+                values: new object[,]
+                {
+                    { 1, "The Avengers Saga", "Marvel: Avengers" },
+                    { 2, "Interstellar", "The Interstellar Saga" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Movies",
                 columns: new[] { "Id", "Director", "FranchiseId", "Genre", "MovieTitle", "PhotoUrl", "ReleaseYear", "YoutubeLink" },
+                values: new object[] { 2, "Joe & Anthony Russo", 1, "Action, Sci-fi", "Avengers: End Game", "https://www.imdb.com/title/tt4154796/mediaviewer/rm2775147008/", 2019, "https://www.youtube.com/watch?v=TcMBFSGVi1c" });
+
+            migrationBuilder.InsertData(
+                table: "Movies",
+                columns: new[] { "Id", "Director", "FranchiseId", "Genre", "MovieTitle", "PhotoUrl", "ReleaseYear", "YoutubeLink" },
+                values: new object[] { 3, "Francis Ford Coppola", 1, "Crime, Drama", "The Godfather", "https://www.imdb.com/title/tt0068646/mediaviewer/rm746868224/", 1972, "https://www.youtube.com/watch?v=sY1S34973zA" });
+
+            migrationBuilder.InsertData(
+                table: "Movies",
+                columns: new[] { "Id", "Director", "FranchiseId", "Genre", "MovieTitle", "PhotoUrl", "ReleaseYear", "YoutubeLink" },
+                values: new object[] { 1, "Christopher Nolan", 2, "Sci-fi", "Interstellar", "https://www.imdb.com/title/tt0816692/mediaviewer/rm4043724800/", 2014, "https://www.youtube.com/watch?v=zSWdZVtXT7E&t=60s" });
+
+            migrationBuilder.InsertData(
+                table: "MovieCharacters",
+                columns: new[] { "CharacterId", "MovieId" },
                 values: new object[,]
                 {
-                    { 1, "Christopher Nolan", null, "Sci-fi", "Interstellar", "https://www.imdb.com/title/tt0816692/mediaviewer/rm4043724800/", 2014, "https://www.youtube.com/watch?v=zSWdZVtXT7E&t=60s" },
-                    { 2, "Joe & Anthony Russo", null, "Action, Sci-fi", "Avengers: End Game", "https://www.imdb.com/title/tt4154796/mediaviewer/rm2775147008/", 2019, "https://www.youtube.com/watch?v=TcMBFSGVi1c" },
-                    { 3, "Francis Ford Coppola", null, "Crime, Drama", "The Godfather", "https://www.imdb.com/title/tt0068646/mediaviewer/rm746868224/", 1972, "https://www.youtube.com/watch?v=sY1S34973zA" }
+                    { 1, 2 },
+                    { 2, 3 },
+                    { 1, 1 },
+                    { 2, 1 }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CharacterMovie_MoviesId",
-                table: "CharacterMovie",
-                column: "MoviesId");
+                name: "IX_MovieCharacters_MovieId",
+                table: "MovieCharacters",
+                column: "MovieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Movies_FranchiseId",
@@ -124,7 +144,7 @@ namespace Assignment_3.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CharacterMovie");
+                name: "MovieCharacters");
 
             migrationBuilder.DropTable(
                 name: "Characters");

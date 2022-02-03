@@ -8,19 +8,11 @@ namespace Assignment_3
 {
     public class MovieDBContext : DbContext
     {
-        public MovieDBContext([NotNullAttribute]DbContextOptions options) : base(options)
-        {
-
-        }
+        public MovieDBContext([NotNullAttribute]DbContextOptions options) : base(options) { }
 
         public DbSet<Character> Characters { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Franchise> Franchises { get; set; }
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlServer("Data source = DESKTOP-S6N08V2\\SQLEXPRESS; Initial Catalog = MoviesCharactersDB; Integrated Security=true;");
-        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -73,24 +65,25 @@ namespace Assignment_3
             modelBuilder.Entity<Franchise>().HasData(
 
                 new Franchise { Id = 1, Name = "Marvel: Avengers", Description = "The Avengers Saga" },
-                new Franchise { Id = 2, Name = "The Interstellar Saga", Description = "Interstellar"}
-                );
+                new Franchise { Id = 2, Name = "The Interstellar Saga", Description = "Interstellar"});
 
-            //Seed m2m movie-characters.
-            //modelBuilder.Entity<Character>()
-            //    .HasMany(p => p.Movies)
-            //    .WithMany(m => m.Characters)
-            //    .UsingEntity<Dictionary<string, object>>(
-            //    "MovieCharacters",
-            //    r => r.HasOne<Movie>().WithMany().HasForeignKey("MovieId"),
-            //    l => l.HasOne<Character>().WithMany().HasForeignKey("CharacterId"),
-            //    je =>
-            //    {
-            //        je.HasKey("MovieId, CharacterId");
-            //        je.HasData(
-            //            new { MovieId = 1, CharacterId = 1 },
-            //            new { MovieId = 1, CharacterId = 2 });
-            //    });
+            //Seed m2m movie - characters.
+            modelBuilder.Entity<Movie>()
+                .HasMany(p => p.Characters)
+                .WithMany(m => m.Movies)
+                .UsingEntity<Dictionary<string, object>>(
+                "MovieCharacters",
+                r => r.HasOne<Character>().WithMany().HasForeignKey("CharacterId"),
+                l => l.HasOne<Movie>().WithMany().HasForeignKey("MovieId"),
+                je =>
+                {
+                    je.HasKey("CharacterId", "MovieId");
+                    je.HasData(
+                        new { MovieId = 1, CharacterId = 1 },
+                        new { MovieId = 1, CharacterId = 2 },
+                        new { MovieId = 3, CharacterId = 2 },
+                        new { MovieId = 2, CharacterId = 3});
+                });
         }
     }
 }
