@@ -45,16 +45,16 @@ namespace Assignment_3.Controller
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<Character>> GetCharacter(int id)
+        public async Task<ActionResult<ReadCharacterDTO>> GetCharacter(int id)
         {
-            var character = await _context.Characters.FindAsync(id);
+            var character = await _context.Characters.Include(c => c.Movies).SingleOrDefaultAsync(c => c.Id == id);
 
             if (character == null)
             {
                 return NotFound();
             }
 
-            return character;
+            return _mapper.Map<ReadCharacterDTO>(character);
         }
 
         /// <summary>

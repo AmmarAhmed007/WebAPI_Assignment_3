@@ -13,8 +13,7 @@ namespace Assignment_3.Profiles
             //Map from Character to ReadCharacterDTO
             CreateMap<Character, ReadCharacterDTO>()
                 .ForMember(mdto => mdto.Movies, option => option
-                .MapFrom(c => c.Movies.Select(m => m.Id).ToArray()))
-                .ReverseMap();
+                .MapFrom(c => c.Movies.Select(m => m.Id).ToArray()));
             CreateMap<CharacterDTO, Character>();
             
         }

@@ -45,16 +45,16 @@ namespace Assignment_3.Controller
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<Franchise>> GetFranchise(int id)
+        public async Task<ActionResult<ReadFranchiseDTO>> GetFranchise(int id)
         {
-            var franchise = await _context.Franchises.FindAsync(id);
+            var franchise = await _context.Franchises.Include(c => c.Movies).SingleOrDefaultAsync(c => c.Id == id);
 
             if (franchise == null)
             {
                 return NotFound();
             }
 
-            return franchise;
+            return _mapper.Map<ReadFranchiseDTO>(franchise);
         }
 
         /// <summary>

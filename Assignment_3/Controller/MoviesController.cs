@@ -44,16 +44,16 @@ namespace Assignment_3.Controller
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<Movie>> GetMovie(int id)
+        public async Task<ActionResult<ReadMovieDTO>> GetMovie(int id)
         {
-            var movie = await _context.Movies.FindAsync(id);
+            var movie = await _context.Movies.Include(c => c.Characters).SingleOrDefaultAsync(c => c.Id == id); 
 
             if (movie == null)
             {
                 return NotFound();
             }
 
-            return movie;
+            return _mapper.Map<ReadMovieDTO>(movie);
         }
 
         /// <summary>
