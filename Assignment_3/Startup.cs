@@ -1,3 +1,4 @@
+using Assignment_3.Services.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +33,10 @@ namespace Assignment_3
             services.AddDbContext<MovieDBContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConn")));
             services.AddControllers();
             services.AddAutoMapper(typeof(Startup));
+
+            //services.AddScoped<ICharacterService, CharacterService>();
+            //services.AddScoped<IFranchiseService, FranchsieService>();
+            //services.AddScoped<IMovieService, MovieService>();
 
             services.AddSwaggerGen(c =>
             {

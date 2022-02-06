@@ -13,10 +13,13 @@ namespace Assignment_3.Profiles
             CreateMap<Franchise, ReadFranchiseDTO>()
                 .ForMember(fdto => fdto.Movies, option => option
                 .MapFrom(f => f.Movies.Select(m => m.Id).ToArray()));
-                
+
             //Map from FranchiseDTO to Franchise
-            CreateMap<FranchiseDTO, Franchise>()
-                .ReverseMap();
+            CreateMap<CreateFranchiseDTO, Franchise>();
+
+            //Map from UpdateFranchiseDTO to Franchise
+            CreateMap<UpdateFranchiseDTO, Franchise>();
+               
         }
     }
 }

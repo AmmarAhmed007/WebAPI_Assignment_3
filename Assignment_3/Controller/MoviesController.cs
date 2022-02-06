@@ -33,9 +33,9 @@ namespace Assignment_3.Controller
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies()
+        public async Task<ActionResult<IEnumerable<CreateMovieDTO>>> GetMovies()
         {
-            return _mapper.Map<List<MovieDTO>>(await _context.Movies.Include(c => c.Characters).ToListAsync());
+            return _mapper.Map<List<CreateMovieDTO>>(await _context.Movies.Include(c => c.Characters).ToListAsync());
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Assignment_3.Controller
         /// <param name="movieDto"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMovie(int id, MovieDTO movieDto)
+        public async Task<IActionResult> PutMovie(int id, CreateMovieDTO movieDto)
         {
             if (id != movieDto.Id)
             {

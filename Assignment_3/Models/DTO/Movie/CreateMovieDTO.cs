@@ -2,7 +2,7 @@
 
 namespace Assignment_3.Models.DTO.Movie
 {
-    public class MovieDTO
+    public class CreateMovieDTO
     {
         public int Id { get; set; }
         public string MovieTitle { get; set; }
