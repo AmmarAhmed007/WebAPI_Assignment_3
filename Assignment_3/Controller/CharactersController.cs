@@ -10,6 +10,7 @@ using Assignment_3.Models;
 using System.Net.Mime;
 using AutoMapper;
 using Assignment_3.Models.DTO.Character;
+using Assignment_3.Services.Interface;
 
 namespace Assignment_3.Controller
 {
@@ -21,12 +22,12 @@ namespace Assignment_3.Controller
     public class CharactersController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly MovieDBContext _context;
+        private readonly ICharacterService _characterService;
 
-        public CharactersController(MovieDBContext context, IMapper mapper)
+        public CharactersController(ICharacterService characterService, IMapper mapper)
         {
             _mapper = mapper;
-            _context = context;
+            _characterService = characterService;
         }
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace Assignment_3.Controller
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ReadCharacterDTO>>> GetCharacters()
         {
-            return _mapper.Map<List<ReadCharacterDTO>>(await _context.Characters.Include(c => c.Movies).ToListAsync());
+            return _mapper.Map<List<ReadCharacterDTO>>(await _characterService.GetAllCharactersAsync());
         }
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace Assignment_3.Controller
         [HttpGet("{id}")]
         public async Task<ActionResult<ReadCharacterDTO>> GetCharacter(int id)
         {
-            var character = await _context.Characters.Include(c => c.Movies).SingleOrDefaultAsync(c => c.Id == id);
+            var character = await _characterService.GetCharacterByIdAsync(id);
 
             if (character == null)
             {
@@ -71,25 +72,9 @@ namespace Assignment_3.Controller
                 return BadRequest();
             }
 
-            _context.Entry(character).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CharacterExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            var chara = _mapper.Map<Character>(character);
+            await _characterService.UpdateCharacterAsync(chara);
+            return Ok($"Updated Character");
         }
 
         /// <summary>
@@ -100,8 +85,8 @@ namespace Assignment_3.Controller
         [HttpPost]
         public async Task<ActionResult<Character>> PostCharacter(Character character)
         {
-            _context.Characters.Add(character);
-            await _context.SaveChangesAsync();
+            var chara = _mapper.Map<Character>(character);
+            chara = await _characterService.CreateCharacterAsync(chara);
 
             return CreatedAtAction("GetCharacter", new { id = character.Id }, character);
         }
@@ -114,21 +99,21 @@ namespace Assignment_3.Controller
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCharacter(int id)
         {
-            var character = await _context.Characters.FindAsync(id);
-            if (character == null)
-            {
-                return NotFound();
-            }
+            if (!_characterService.CharacterExistence(id))
+                return NotFound($"Character Id: {id} is not found");
 
-            _context.Characters.Remove(character);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            await _characterService.DeleteCharacterAsync(id);
+            return Ok($"Deleted character by id: {id}");
         }
 
-        private bool CharacterExists(int id)
+        [HttpPatch("{id}/movies")]
+        public async Task<IActionResult> PatchCharacterMovie(int id, List<int> movie)
         {
-            return _context.Characters.Any(e => e.Id == id);
+            if (!_characterService.CharacterExistence(id))
+                return NotFound($"Character Id: {id} is not found");
+
+            await _characterService.EditMoviesCharacterAsync(id, movie);
+            return Ok($"Movie updated for character: {id}");
         }
     }
 }
