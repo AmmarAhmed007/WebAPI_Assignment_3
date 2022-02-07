@@ -16,7 +16,7 @@ using Assignment_3.Models.DTO.Character;
 
 namespace Assignment_3.Controller
 {
-    [Route("api/franchises")]
+    [Route("api/v1/franchises")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
@@ -114,7 +114,7 @@ namespace Assignment_3.Controller
         }
 
         /// <summary>
-        /// Retrivves franchises related to a character
+        /// Retrives franchises related to a character
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

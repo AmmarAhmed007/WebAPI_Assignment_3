@@ -13,8 +13,8 @@ namespace Assignment_3.Profiles
                 .ForMember(mdto => mdto.Characters, option => option
                 .MapFrom(m => m.Characters.Select(c => c.Id).ToArray()))
                 .ForMember(mdto => mdto.Franchise, option => option
-                .MapFrom(c => c.FranchiseId))
-                .ReverseMap();
+                .MapFrom(c => c.FranchiseId));
+                //.ReverseMap();
 
             //Map from CreateMovieDTO to Movie
             CreateMap<CreateMovieDTO, Movie>();

@@ -65,7 +65,7 @@ namespace Assignment_3.Controller
         /// <param name="character"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCharacter(int id, Character character)
+        public async Task<IActionResult> PutCharacter(int id, UpdateCharacterDTO character)
         {
             if (id != character.Id)
             {

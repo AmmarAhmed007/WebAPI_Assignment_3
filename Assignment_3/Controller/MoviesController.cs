@@ -14,7 +14,7 @@ using Assignment_3.Models.DTO.Character;
 
 namespace Assignment_3.Controller
 {
-    [Route("api/movies")]
+    [Route("api/v1/movies")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
@@ -91,7 +91,7 @@ namespace Assignment_3.Controller
         /// <param name="movie"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<Movie>> PostMovie(Movie movie)
+        public async Task<ActionResult<Movie>> PostMovie(CreateMovieDTO movie)
         {
             var dMovie = _mapper.Map<Movie>(movie);
             dMovie = await _movieService.CreateMovieAsync(dMovie);
@@ -151,7 +151,6 @@ namespace Assignment_3.Controller
             {
                 return NotFound();
             }
-
             try
             {
                 await _movieService.UpdateFranchiseMovieAsync(id, franchise);
