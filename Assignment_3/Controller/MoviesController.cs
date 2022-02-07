@@ -9,6 +9,8 @@ using Assignment_3;
 using System.Net.Mime;
 using AutoMapper;
 using Assignment_3.Models.DTO.Movie;
+using Assignment_3.Services.Interface;
+using Assignment_3.Models.DTO.Character;
 
 namespace Assignment_3.Controller
 {
@@ -19,12 +21,13 @@ namespace Assignment_3.Controller
     [ApiConventionType(typeof(DefaultApiConventions))]
     public class MoviesController : ControllerBase
     {
-        private readonly MovieDBContext _context;
+        //private readonly MovieDBContext _context;
+        private readonly IMovieService _movieService;
         private readonly IMapper _mapper;
 
-        public MoviesController(MovieDBContext context, IMapper mapper)
+        public MoviesController(IMovieService movieService, IMapper mapper)
         {
-            _context = context;
+            _movieService = movieService;
             _mapper = mapper;
         }
 
@@ -35,7 +38,7 @@ namespace Assignment_3.Controller
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CreateMovieDTO>>> GetMovies()
         {
-            return _mapper.Map<List<CreateMovieDTO>>(await _context.Movies.Include(c => c.Characters).ToListAsync());
+            return _mapper.Map<List<CreateMovieDTO>>(await _movieService.GetAllMoviesAsync());   
         }
 
         /// <summary>
@@ -46,7 +49,7 @@ namespace Assignment_3.Controller
         [HttpGet("{id}")]
         public async Task<ActionResult<ReadMovieDTO>> GetMovie(int id)
         {
-            var movie = await _context.Movies.Include(c => c.Characters).SingleOrDefaultAsync(c => c.Id == id); 
+            var movie = await _movieService.GetMovieByIdAsync(id);
 
             if (movie == null)
             {
@@ -60,36 +63,26 @@ namespace Assignment_3.Controller
         /// Update a movie
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="movieDto"></param>
+        /// <param name="movie"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMovie(int id, CreateMovieDTO movieDto)
+        public async Task<IActionResult> PutMovie(int id, CreateMovieDTO movie)
         {
-            if (id != movieDto.Id)
+            if (id != movie.Id)
             {
                 return BadRequest();
             }
+
+            if (!_movieService.MovieExistence(id))
+            {
+                return NotFound();
+            }
+
             //Map to domain
-            Movie domainMovie = _mapper.Map<Movie>(movieDto);
-            _context.Entry(domainMovie).State = EntityState.Modified;
+            Movie domain = _mapper.Map<Movie>(movie);
+            await _movieService.UpdateMovieAsync(domain);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MovieExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok();
         }
 
         /// <summary>
@@ -100,10 +93,10 @@ namespace Assignment_3.Controller
         [HttpPost]
         public async Task<ActionResult<Movie>> PostMovie(Movie movie)
         {
-            _context.Movies.Add(movie);
-            await _context.SaveChangesAsync();
+            var dMovie = _mapper.Map<Movie>(movie);
+            dMovie = await _movieService.CreateMovieAsync(dMovie);
 
-            return CreatedAtAction("GetMovie", new { id = movie.Id }, movie);
+            return CreatedAtAction("GetMovie", new { id = dMovie.Id }, _mapper.Map<ReadMovieDTO>(dMovie));
         }
 
         /// <summary>
@@ -114,21 +107,61 @@ namespace Assignment_3.Controller
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovie(int id)
         {
-            var movie = await _context.Movies.FindAsync(id);
-            if (movie == null)
+            if (!_movieService.MovieExistence(id))
             {
                 return NotFound();
             }
 
-            _context.Movies.Remove(movie);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            await _movieService.DeleteMovieAsync(id);
+            return Ok();
         }
 
-        private bool MovieExists(int id)
+        [HttpGet("{id}/characters")]
+        public async Task<ActionResult<IEnumerable<ReadCharacterDTO>>> GetMovieCharacters(int id)
         {
-            return _context.Movies.Any(e => e.Id == id);
+            if (!_movieService.MovieExistence(id))
+                return NotFound();
+
+            return _mapper.Map<List<ReadCharacterDTO>>(
+                await _movieService.GetCharactersMovieByIdAsync(id));
+        }
+
+        [HttpPatch("{id}/characters")]
+        public async Task<IActionResult> UpdateMovieCharacters(int id, List<int> character)
+        {
+            if (!_movieService.MovieExistence(id))
+                return NotFound();
+            try
+            {
+                await _movieService.UpdateCharactersMovieAsync(id, character);
+            }
+            catch (KeyNotFoundException)
+            {
+                return BadRequest();
+            }
+            string characters = " ";
+            character.ForEach(m => characters += $"{m},");
+            return Ok();
+        }
+
+        [HttpPatch("{id}/franchise")]
+        public async Task<IActionResult> UpdateMovieFranchise(int id, List<int> franchise)
+        {
+            if (!_movieService.MovieExistence(id))
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _movieService.UpdateFranchiseMovieAsync(id, franchise);
+            }
+            catch (KeyNotFoundException)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
         }
     }
 }

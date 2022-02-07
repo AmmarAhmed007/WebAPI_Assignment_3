@@ -12,8 +12,8 @@ namespace Assignment_3.Services.Interface
         public Task<Movie> CreateMovieAsync(Movie movie);
         public Task UpdateMovieAsync(Movie movie);
         public Task DeleteMovieAsync(int id);
-        public Task UpdateFranchiseMovieAsync(int movie, List<int> characters);
-        public Task UpdateCharactersMovieAsync(int franchise, int movie);
+        public Task UpdateFranchiseMovieAsync(int movie, List<int> franchise);
+        public Task UpdateCharactersMovieAsync(int movie, List<int> character);
         public bool MovieExistence(int id);
     }
 }

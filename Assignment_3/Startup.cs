@@ -1,3 +1,4 @@
+using Assignment_3.Services;
 using Assignment_3.Services.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,9 +35,9 @@ namespace Assignment_3
             services.AddControllers();
             services.AddAutoMapper(typeof(Startup));
 
-            //services.AddScoped<ICharacterService, CharacterService>();
-            //services.AddScoped<IFranchiseService, FranchsieService>();
-            //services.AddScoped<IMovieService, MovieService>();
+            services.AddScoped<ICharacterService, CharacterService>();
+            services.AddScoped<IFranchiseService, FranchiseService>();
+            services.AddScoped<IMovieService, MovieService>();
 
             services.AddSwaggerGen(c =>
             {

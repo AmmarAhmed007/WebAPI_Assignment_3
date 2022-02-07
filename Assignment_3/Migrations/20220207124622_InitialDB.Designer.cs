@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Assignment_3.Migrations
 {
     [DbContext(typeof(MovieDBContext))]
-    [Migration("20220203161541_InitialDB")]
+    [Migration("20220207124622_InitialDB")]
     partial class InitialDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -213,7 +213,7 @@ namespace Assignment_3.Migrations
                         },
                         new
                         {
-                            CharacterId = 1,
+                            CharacterId = 3,
                             MovieId = 2
                         });
                 });

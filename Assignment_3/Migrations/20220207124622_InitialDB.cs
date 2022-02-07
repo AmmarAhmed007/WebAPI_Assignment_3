@@ -124,7 +124,7 @@ namespace Assignment_3.Migrations
                 columns: new[] { "CharacterId", "MovieId" },
                 values: new object[,]
                 {
-                    { 1, 2 },
+                    { 3, 2 },
                     { 2, 3 },
                     { 1, 1 },
                     { 2, 1 }

@@ -83,12 +83,15 @@ namespace Assignment_3.Controller
         /// <param name="character"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<Character>> PostCharacter(Character character)
+        public async Task<ActionResult<CreateCharacterDTO>> PostCharacter(CreateCharacterDTO character)
         {
             var chara = _mapper.Map<Character>(character);
             chara = await _characterService.CreateCharacterAsync(chara);
 
-            return CreatedAtAction("GetCharacter", new { id = character.Id }, character);
+            string uri = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host
+                + HttpContext.Request.Path + "/" + chara.Id;
+
+            return CreatedAtAction(uri, _mapper.Map<ReadCharacterDTO>(character));
         }
 
         /// <summary>
@@ -100,20 +103,26 @@ namespace Assignment_3.Controller
         public async Task<IActionResult> DeleteCharacter(int id)
         {
             if (!_characterService.CharacterExistence(id))
-                return NotFound($"Character Id: {id} is not found");
+                return NotFound();
 
             await _characterService.DeleteCharacterAsync(id);
-            return Ok($"Deleted character by id: {id}");
+            return Ok();
         }
 
+        /// <summary>
+        /// Updates characters movie
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="movie"></param>
+        /// <returns></returns>
         [HttpPatch("{id}/movies")]
         public async Task<IActionResult> PatchCharacterMovie(int id, List<int> movie)
         {
             if (!_characterService.CharacterExistence(id))
-                return NotFound($"Character Id: {id} is not found");
+                return NotFound();
 
             await _characterService.EditMoviesCharacterAsync(id, movie);
-            return Ok($"Movie updated for character: {id}");
+            return Ok();
         }
     }
 }
